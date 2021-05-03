@@ -172,25 +172,7 @@ export function Reproductor() {
 
 	return (
 		<div className="container">
-			<div className="lista">
-				{songList.map((canciones, index) => {
-					return (
-						<ul
-							key={index}
-							className="list-group list-group-horizontal">
-							<li className="list-group-item">{canciones.id}</li>
-							<li
-								className="list-group-item"
-								onClick={() => {
-									cambiarSrcAudio(canciones.url);
-									reproductor.current.play();
-								}}>
-								{canciones.name}
-							</li>
-						</ul>
-					);
-				})}
-			</div>
+			<div className="lista" onClick={() => crearLista()}></div>
 			<audio
 				ref={reproductor}
 				src="https://assets.breatheco.de/apis/sound/files/mario/songs/castle.mp3"
