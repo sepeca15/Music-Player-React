@@ -136,34 +136,19 @@ export function Reproductor() {
 		}
 	]);
 
+	const [isPlaying, setPlaying] = useState(false);
+
 	const controlPlayPause = () => {
 		if (reproductor.current.paused) {
 			reproductor.current.play();
+			setPlaying(true);
 		} else if (!reproductor.current.paused) {
 			reproductor.current.pause();
+			setPlaying(false);
 		}
 	};
 
 	let reproductor = useRef();
-
-	//let approved = students.filter(student => student.score >= 11);
-
-	//let idOfSongList = songList.filter(songList.id);
-
-	//let nameOfSongList = songList.filter(songList.name);
-
-	//let urlOfSongList = songList.filter(songList.url);
-
-	let crearLista = () => {
-		songList.map((canciones, index) => {
-			return (
-				<ul key={index} className="list-group list-group-horizontal">
-					<li className="list-group-item">{canciones.id}</li>
-					<li className="list-group-item">{canciones.name}</li>
-				</ul>
-			);
-		});
-	};
 
 	const cambiarAudioAnterior = () => {
 		let anteriorCancion = SongActual - 1;
@@ -190,6 +175,7 @@ export function Reproductor() {
 		reproductor.current.src = stringfijo + url;
 		setSongActual(song);
 		reproductor.current.play();
+		setPlaying(true);
 	};
 
 	return (
@@ -205,6 +191,7 @@ export function Reproductor() {
 					{songList.map((canciones, index) => {
 						return (
 							<tr
+								className={SongActual == index ? "active" : ""}
 								key={index}
 								onClick={() => {
 									cambiarSrcAudio(canciones.url, index);
@@ -221,7 +208,11 @@ export function Reproductor() {
 					<i className="fas fa-backward"></i>
 				</div>
 				<div className="mx-4" onClick={controlPlayPause}>
-					<i className="fas fa-play"></i>
+					{isPlaying ? (
+						<i className="fas fa-pause"></i>
+					) : (
+						<i className="fas fa-play"></i>
+					)}
 				</div>
 				<div onClick={cambiarAudioPosterior}>
 					<i className="fas fa-forward"></i>
