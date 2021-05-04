@@ -166,21 +166,23 @@ export function Reproductor() {
 	};
 
 	const cambiarAudioAnterior = () => {
-		let anteriorCancion = SongActual - 1;
 		// verificar si el song list esta en el final poner la primera si no hacer lo demas
-		if (anteriorCancion <= 0) {
-			anteriorCancion = songList.length - 1;
+		if (SongActual < songList.length - 1) {
+			let anteriorCancion = SongActual - 1;
+			cambiarSrcAudio(songList[anteriorCancion].url, anteriorCancion);
+			reproductor.current.play();
+		} else {
+			let primerCancion = SongActual - SongActual;
+			cambiarSrcAudio(songList[primerCancion].url, primerCancion);
+			reproductor.current.play();
 		}
-		cambiarSrcAudio(songList[anteriorCancion].url, anteriorCancion);
 	};
 
 	const cambiarAudioPosterior = () => {
-		let siguienteCancion = SongActual + 1;
 		// verificar si el song list esta al principio y poner la ultima si no hacer lo demas
-		if (siguienteCancion > songList.length - 1) {
-			siguienteCancion = 0;
-		}
+		let siguienteCancion = SongActual + 1;
 		cambiarSrcAudio(songList[siguienteCancion].url, siguienteCancion);
+		reproductor.current.play();
 	};
 
 	const [SongActual, setSongActual] = useState();
@@ -189,48 +191,42 @@ export function Reproductor() {
 		let stringfijo = "https://assets.breatheco.de/apis/sound/";
 		reproductor.current.src = stringfijo + url;
 		setSongActual(song);
-		reproductor.current.play();
 	};
 
 	return (
 		<div className="container">
-			<table className="table table-hover table-dark oscuro">
-				<thead>
-					<tr>
-						<th scope="col">#</th>
-						<th scope="col">Nombre</th>
-					</tr>
-				</thead>
-				<tbody>
-					{songList.map((canciones, index) => {
-						return (
-							<tr
-								key={index}
+			<div className="lista">
+				{songList.map((canciones, index) => {
+					return (
+						<ul
+							key={index}
+							className="list-group list-group-horizontal">
+							<li className="list-group-item">{canciones.id}</li>
+							<li
+								className="list-group-item"
 								onClick={() => {
 									cambiarSrcAudio(canciones.url, index);
+									reproductor.current.play();
 								}}>
-								<th scope="row">{canciones.id}</th>
-								<td>{canciones.name}</td>
-							</tr>
-						);
-					})}
-				</tbody>
-			</table>
-			<div className="oscuro d-flex justify-content-center border-top p-1 text-white botones">
-				<div onClick={cambiarAudioAnterior}>
-					<i className="fas fa-backward"></i>
-				</div>
-				<div className="mx-4" onClick={controlPlayPause}>
-					<i className="fas fa-play"></i>
-				</div>
-				<div onClick={cambiarAudioPosterior}>
-					<i className="fas fa-forward"></i>
-				</div>
+								{canciones.name}
+							</li>
+						</ul>
+					);
+				})}
 			</div>
 			<audio
 				ref={reproductor}
 				src="https://assets.breatheco.de/apis/sound/files/mario/songs/castle.mp3"
 			/>
+			<div className="botones row">
+				<button onClick={cambiarAudioAnterior}>
+					icon anterior cancion
+				</button>
+				<button onClick={controlPlayPause}>icon de play</button>
+				<button onClick={cambiarAudioPosterior}>
+					icon posterior cancion
+				</button>
+			</div>
 		</div>
 	);
 }
